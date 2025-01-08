@@ -3,9 +3,11 @@ package com.trots.oxtest.model.entity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -26,6 +28,11 @@ public class ContactEntity extends BaseEntity {
     @Column(unique = true, nullable = false)
     private String email;
     private String phone;
+
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @OneToOne(fetch = FetchType.EAGER)
+    @EqualsAndHashCode.Exclude
+    private UserEntity user;
 
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
