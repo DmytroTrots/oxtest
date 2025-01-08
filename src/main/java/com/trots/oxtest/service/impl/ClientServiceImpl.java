@@ -30,13 +30,24 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public ClientDTO findById(Long id) {
         ClientEntity client = clientRepository.findById(id).orElseThrow(() ->
-                new ObjectNotFoundException("Task not found", id));
+                new ObjectNotFoundException("Client not found", id));
         return clientMapper.toDto(client);
     }
 
     @Override
     public List<ClientDTO> findAll() {
         return clientMapper.toDtos(clientRepository.findAll());
+    }
+
+    @Override
+    public ClientDTO updateById(Long id, ClientDTO clientDTO) {
+        ClientEntity existingClient = clientRepository.findById(id).orElseThrow(() ->
+                    new ObjectNotFoundException("Client not found for update", id));
+
+        existingClient.setAddress(clientDTO.getAddress());
+        existingClient.setIndustry(clientDTO.getIndustry());
+        existingClient.setCompanyName(clientDTO.getCompanyName());
+        return clientMapper.toDto(existingClient);
     }
 
 }
