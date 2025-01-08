@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class OxtestApplication {
+public class OxCrmApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(OxtestApplication.class, args);
+        SpringApplication.run(OxCrmApplication.class, args);
     }
 
 }
