@@ -2,6 +2,8 @@ package com.trots.oxtest.model.entity;
 
 import com.trots.oxtest.model.TaskStatus;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -20,6 +22,7 @@ import lombok.NoArgsConstructor;
 public class TaskEntity extends BaseEntity {
 
     private String description;
+    @Enumerated(EnumType.STRING)
     private TaskStatus status;
     private Date deadlineTime;
 

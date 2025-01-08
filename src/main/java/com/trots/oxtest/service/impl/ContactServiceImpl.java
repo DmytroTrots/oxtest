@@ -39,4 +39,16 @@ public class ContactServiceImpl implements ContactService {
         return contactMapper.toDtos(contactRepository.findAll());
     }
 
+    @Override
+    public ContactDTO updateById(Long id, ContactDTO contactDTO) {
+        ContactEntity existingContact = contactRepository.findById(id).orElseThrow(() ->
+               new ObjectNotFoundException("Contact not found for update", id));
+
+        existingContact.setEmail(contactDTO.getEmail());
+        existingContact.setPhone(contactDTO.getPhone());
+        existingContact.setFirstName(contactDTO.getFirstName());
+        existingContact.setLastName(contactDTO.getLastName());
+        return contactMapper.toDto(existingContact);
+    }
+
 }

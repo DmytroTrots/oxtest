@@ -39,4 +39,15 @@ public class TaskServiceImpl implements TaskService {
         return taskMapper.toDtos(taskRepository.findAll());
     }
 
+    @Override
+    public TaskDTO updateById(Long id, TaskDTO taskDTO) {
+        TaskEntity existingTask = taskRepository.findById(id).orElseThrow(() ->
+                new ObjectNotFoundException("Task not found for update", id));
+
+        existingTask.setDescription(taskDTO.getDescription());
+        existingTask.setStatus(taskDTO.getStatus());
+        existingTask.setDeadlineTime(taskDTO.getDeadlineTime());
+        return taskMapper.toDto(existingTask);
+    }
+
 }

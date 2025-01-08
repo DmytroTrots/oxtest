@@ -4,11 +4,17 @@ import com.trots.oxtest.dto.TaskDTO;
 import com.trots.oxtest.service.TaskService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -17,11 +23,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v_0/task")
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "task")
 public class TaskController {
 
     private final TaskService taskService;
 
     @GetMapping
+    @Caching(
+            put = {@CachePut(key = "'allTasks'")},
+            cacheable = {@Cacheable(key = "'allTasks'")}
+    )
     public List<TaskDTO> findAll() {
        return taskService.findAll();
     }
@@ -33,13 +44,21 @@ public class TaskController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @CacheEvict(key = "'allTasks'")
     public void deleteById(@PathVariable Long id) {
         taskService.deleteById(id);
     }
 
     @PostMapping
+    @CacheEvict(key = "'allTasks'")
     public TaskDTO save(@RequestBody TaskDTO taskDTO) {
         return taskService.save(taskDTO);
+    }
+
+    @PutMapping("/{id}")
+    @CacheEvict(key = "'allTasks'")
+    public TaskDTO updateById(@PathVariable Long id, @RequestBody TaskDTO taskDTO) {
+        return taskService.updateById(id, taskDTO);
     }
 
 }
