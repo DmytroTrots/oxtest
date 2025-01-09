@@ -13,5 +13,5 @@ public interface ClientService {
 
     List<ClientDTO> findAll();
 
-    ClientDTO updateById(Long id, ClientDTO clientDTO);
+    ClientDTO update(ClientDTO clientDTO);
 }

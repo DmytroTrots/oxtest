@@ -2,6 +2,7 @@ package com.trots.oxtest.model.entity;
 
 import com.trots.oxtest.model.Role;
 import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -24,19 +25,21 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Data
 public class UserEntity extends BaseEntity implements UserDetails {
 
+    @Column(unique = true)
     private String email;
     private String password;
 
     @Transient
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToOne(fetch = FetchType.LAZY)
     private ClientEntity client;
 
     @Transient
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToOne(fetch = FetchType.LAZY)
     private ContactEntity contact;
-
 
     @ElementCollection
     @CollectionTable(name = "roles", joinColumns = @JoinColumn(name = "user_id"))
@@ -49,7 +52,6 @@ public class UserEntity extends BaseEntity implements UserDetails {
 
     @Override
     public String getPassword() {
-        //should be encrypted
         return password;
     }
 

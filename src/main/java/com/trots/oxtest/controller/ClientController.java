@@ -2,6 +2,8 @@ package com.trots.oxtest.controller;
 
 import com.trots.oxtest.dto.ClientDTO;
 import com.trots.oxtest.service.ClientService;
+import com.trots.oxtest.service.impl.UserClientContactManager;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ClientController {
 
     private final ClientService clientService;
+    private final UserClientContactManager userClientContactManager;
 
     @GetMapping
     @Cacheable(key = "'allClients'")
@@ -38,7 +41,7 @@ public class ClientController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(key = "'allClients'")
     public void deleteById(@PathVariable Long id) {
         clientService.deleteById(id);
@@ -46,14 +49,14 @@ public class ClientController {
 
     @PostMapping
     @CacheEvict(key = "'allClients'")
-    public ClientDTO save(@RequestBody ClientDTO clientDTO) {
-        return clientService.save(clientDTO);
+    public ClientDTO save(@Valid @RequestBody ClientDTO clientDTO) {
+        return userClientContactManager.saveClientWithUser(clientDTO);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     @CacheEvict(key = "'allClients'")
-    public ClientDTO updateById(@PathVariable Long id, @RequestBody ClientDTO clientDTO) {
-        return clientService.updateById(id, clientDTO);
+    public ClientDTO update(@Valid @RequestBody ClientDTO clientDTO) {
+        return clientService.update(clientDTO);
     }
 
 }
