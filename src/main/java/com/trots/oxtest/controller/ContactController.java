@@ -2,13 +2,13 @@ package com.trots.oxtest.controller;
 
 import com.trots.oxtest.dto.ContactDTO;
 import com.trots.oxtest.service.ContactService;
+import com.trots.oxtest.service.impl.UserClientContactManager;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,12 +27,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class ContactController {
 
     private final ContactService contactService;
+    private final UserClientContactManager userClientContactManager;
 
     @GetMapping
-    @Caching(
-            put = {@CachePut(key = "'allContacts'")},
-            cacheable = {@Cacheable(key = "'allContacts'")}
-    )
+    @Cacheable(key = "'allContacts'")
     public List<ContactDTO> findAll() {
        return contactService.findAll();
     }
@@ -43,7 +41,7 @@ public class ContactController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(key = "'allContacts'")
     public void deleteById(@PathVariable Long id) {
         contactService.deleteById(id);
@@ -51,14 +49,14 @@ public class ContactController {
 
     @PostMapping
     @CacheEvict(key = "'allContacts'")
-    public ContactDTO save(@RequestBody ContactDTO contactDTO) {
-        return contactService.save(contactDTO);
+    public ContactDTO save(@Valid @RequestBody ContactDTO contactDTO) {
+        return userClientContactManager.saveContactWithUser(contactDTO);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     @CacheEvict(key = "'allContacts'")
-    public ContactDTO updateById(@PathVariable Long id, @RequestBody ContactDTO contactDTO) {
-        return contactService.updateById(id, contactDTO);
+    public ContactDTO updateById(@Valid @RequestBody ContactDTO contactDTO) {
+        return contactService.update(contactDTO);
     }
 
 }

@@ -1,14 +1,15 @@
 package com.trots.oxtest.service.impl;
 
 import com.trots.oxtest.dto.ClientDTO;
+import com.trots.oxtest.exception.ResourceNotFoundException;
 import com.trots.oxtest.mapper.ClientMapper;
 import com.trots.oxtest.model.entity.ClientEntity;
 import com.trots.oxtest.repository.ClientRepository;
 import com.trots.oxtest.service.ClientService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +31,7 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public ClientDTO findById(Long id) {
         ClientEntity client = clientRepository.findById(id).orElseThrow(() ->
-                new ObjectNotFoundException("Client not found", id));
+              new ResourceNotFoundException(ClientEntity.class, id));
         return clientMapper.toDto(client);
     }
 
@@ -40,13 +41,15 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public ClientDTO updateById(Long id, ClientDTO clientDTO) {
-        ClientEntity existingClient = clientRepository.findById(id).orElseThrow(() ->
-                    new ObjectNotFoundException("Client not found for update", id));
+    @Transactional
+    public ClientDTO update(ClientDTO clientDTO) {
+        ClientEntity existingClient = clientRepository.findById(clientDTO.getId()).orElseThrow(() ->
+              new ResourceNotFoundException(ClientEntity.class, clientDTO.getId()));
 
         existingClient.setAddress(clientDTO.getAddress());
         existingClient.setIndustry(clientDTO.getIndustry());
         existingClient.setCompanyName(clientDTO.getCompanyName());
+        existingClient.getUser().setEmail(clientDTO.getUser().getEmail());
         return clientMapper.toDto(existingClient);
     }
 

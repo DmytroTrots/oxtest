@@ -2,6 +2,7 @@ package com.trots.oxtest.controller;
 
 import com.trots.oxtest.dto.UserDTO;
 import com.trots.oxtest.service.UserService;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class UserController {
 
     @GetMapping
     public List<UserDTO> findAll() {
-       return userService.findAll();
+        return userService.findAll();
     }
 
     @GetMapping("/{id}")
@@ -34,13 +35,13 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable Long id) {
         userService.deleteById(id);
     }
 
     @PostMapping
-    public UserDTO save(@RequestBody UserDTO userDTO) {
+    public UserDTO save(@Valid @RequestBody UserDTO userDTO) {
         return userService.save(userDTO);
     }
 

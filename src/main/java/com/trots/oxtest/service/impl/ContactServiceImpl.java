@@ -1,14 +1,15 @@
 package com.trots.oxtest.service.impl;
 
 import com.trots.oxtest.dto.ContactDTO;
+import com.trots.oxtest.exception.ResourceNotFoundException;
 import com.trots.oxtest.mapper.ContactMapper;
 import com.trots.oxtest.model.entity.ContactEntity;
 import com.trots.oxtest.repository.ContactRepository;
 import com.trots.oxtest.service.ContactService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,8 +19,8 @@ public class ContactServiceImpl implements ContactService {
     private final ContactMapper contactMapper;
 
     @Override
-    public ContactDTO save(ContactDTO contactDto) {
-        return contactMapper.toDto(contactRepository.save(contactMapper.toEntity(contactDto)));
+    public ContactDTO save(ContactEntity contact) {
+        return contactMapper.toDto(contactRepository.save(contact));
     }
 
     @Override
@@ -30,7 +31,7 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public ContactDTO findById(Long id) {
         ContactEntity contact = contactRepository.findById(id).orElseThrow(() ->
-                new ObjectNotFoundException("Contact not found", id));
+               new ResourceNotFoundException(ContactEntity.class, id));
         return contactMapper.toDto(contact);
     }
 
@@ -40,14 +41,16 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public ContactDTO updateById(Long id, ContactDTO contactDTO) {
-        ContactEntity existingContact = contactRepository.findById(id).orElseThrow(() ->
-               new ObjectNotFoundException("Contact not found for update", id));
+    @Transactional
+    public ContactDTO update(ContactDTO contactDTO) {
+        ContactEntity existingContact = contactRepository.findById(contactDTO.getId()).orElseThrow(() ->
+               new ResourceNotFoundException(ContactEntity.class, contactDTO.getId()));
 
         existingContact.setEmail(contactDTO.getEmail());
         existingContact.setPhone(contactDTO.getPhone());
         existingContact.setFirstName(contactDTO.getFirstName());
         existingContact.setLastName(contactDTO.getLastName());
+        existingContact.getUser().setEmail(contactDTO.getUser().getEmail());
         return contactMapper.toDto(existingContact);
     }
 

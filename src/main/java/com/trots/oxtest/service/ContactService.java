@@ -1,12 +1,13 @@
 package com.trots.oxtest.service;
 
 import com.trots.oxtest.dto.ContactDTO;
+import com.trots.oxtest.model.entity.ContactEntity;
 import java.util.List;
 
 public interface ContactService {
 
 
-    ContactDTO save(ContactDTO contactDto);
+    ContactDTO save(ContactEntity contactDto);
 
     void deleteById(Long id);
 
@@ -14,5 +15,5 @@ public interface ContactService {
 
     List<ContactDTO> findAll();
 
-    ContactDTO updateById(Long id, ContactDTO contactDTO);
+    ContactDTO update(ContactDTO contactDTO);
 }

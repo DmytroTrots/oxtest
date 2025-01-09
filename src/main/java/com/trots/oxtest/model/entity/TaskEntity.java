@@ -1,6 +1,7 @@
 package com.trots.oxtest.model.entity;
 
 import com.trots.oxtest.model.TaskStatus;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -21,13 +22,18 @@ import lombok.NoArgsConstructor;
 @Data
 public class TaskEntity extends BaseEntity {
 
+    @Column(unique = true, nullable = false, length = 300)
     private String description;
+
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TaskStatus status;
+
+    @Column(nullable = false)
     private Date deadlineTime;
 
     @ManyToOne
-    @JoinColumn(name = "contact_id", nullable = false)
+    @JoinColumn(name = "contact_id")
     private ContactEntity contact;
 
 }

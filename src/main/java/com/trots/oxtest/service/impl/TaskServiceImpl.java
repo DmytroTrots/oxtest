@@ -1,14 +1,15 @@
 package com.trots.oxtest.service.impl;
 
 import com.trots.oxtest.dto.TaskDTO;
+import com.trots.oxtest.exception.ResourceNotFoundException;
 import com.trots.oxtest.mapper.TaskMapper;
+import com.trots.oxtest.model.TaskStatus;
 import com.trots.oxtest.model.entity.TaskEntity;
 import com.trots.oxtest.notification.NotificationService;
 import com.trots.oxtest.repository.TaskRepository;
 import com.trots.oxtest.service.TaskService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,8 +23,9 @@ public class TaskServiceImpl implements TaskService {
     private final NotificationService notificationService;
 
     @Override
-    public TaskDTO save(TaskDTO taskDto) {
-        return taskMapper.toDto(taskRepository.save(taskMapper.toEntity(taskDto)));
+    public TaskDTO save(TaskEntity task) {
+        task.setStatus(TaskStatus.OPEN);
+        return taskMapper.toDto(taskRepository.save(task));
     }
 
     @Override
@@ -34,7 +36,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskDTO findById(Long id) {
         TaskEntity task = taskRepository.findById(id).orElseThrow(() ->
-                new ObjectNotFoundException("Task not found", id));
+               new ResourceNotFoundException(TaskEntity.class, id));
         return taskMapper.toDto(task);
     }
 
@@ -44,17 +46,23 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskDTO updateById(Long id, TaskDTO taskDTO) {
-        TaskEntity existingTask = taskRepository.findById(id).orElseThrow(() ->
-                new ObjectNotFoundException("Task not found for update", id));
+    public TaskDTO update(TaskEntity task) {
+        TaskEntity existingTask = taskRepository.findById(task.getId()).orElseThrow(() ->
+               new ResourceNotFoundException(TaskEntity.class, task.getId()));
 
-        existingTask.setDescription(taskDTO.getDescription());
-        existingTask.setStatus(taskDTO.getStatus());
-        existingTask.setDeadlineTime(taskDTO.getDeadlineTime());
+        TaskEntity oldTask = new TaskEntity(existingTask.getDescription(),
+                                              existingTask.getStatus(),
+                                              existingTask.getDeadlineTime(),
+                                              existingTask.getContact());
+
+        existingTask.setDescription(task.getDescription());
+        existingTask.setStatus(task.getStatus());
+        existingTask.setDeadlineTime(task.getDeadlineTime());
+        existingTask.setContact(task.getContact());
 
         TaskDTO updatedTask = taskMapper.toDto(taskRepository.save(existingTask));
 
-        sendTaskNotification(existingTask, taskDTO);
+        sendTaskNotification(oldTask, updatedTask);
 
         return updatedTask;
     }
