@@ -16,8 +16,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
 
-    private static final String TASK_DESTINATION_TOPIC_NAME = "/task/";
-
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
     private final NotificationService notificationService;
@@ -46,6 +44,11 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public List<TaskDTO> findAllByClientId(Long id) {
+        return taskMapper.toDtos(taskRepository.findAllByContactClientId(id));
+    }
+
+    @Override
     public TaskDTO update(TaskEntity task) {
         TaskEntity existingTask = taskRepository.findById(task.getId()).orElseThrow(() ->
                new ResourceNotFoundException(TaskEntity.class, task.getId()));
@@ -71,15 +74,13 @@ public class TaskServiceImpl implements TaskService {
         if (!existingTask.getStatus().equals(taskDTO.getStatus()) && existingTask.getContact() != null) {
             notificationService
                     .notifyUser(existingTask.getContact().getUser().getId().toString(),
-                                "Task status Is changed from " + existingTask.getStatus().name() + " to " + taskDTO.getStatus(),
-                                TASK_DESTINATION_TOPIC_NAME);
+                                "Task status Is changed from " + existingTask.getStatus().name() + " to " + taskDTO.getStatus());
         }
 
         if (!existingTask.getDeadlineTime().equals(taskDTO.getDeadlineTime()) && existingTask.getContact() != null) {
             notificationService
                     .notifyUser(existingTask.getContact().getUser().getId().toString(),
-                                "Task deadline Is changed from " + existingTask.getDeadlineTime().toString() + " to " + taskDTO.getDeadlineTime().toString(),
-                                TASK_DESTINATION_TOPIC_NAME);
+                                "Task deadline Is changed from " + existingTask.getDeadlineTime().toString() + " to " + taskDTO.getDeadlineTime().toString());
         }
     }
 

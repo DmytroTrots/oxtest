@@ -35,6 +35,11 @@ public class ContactController {
        return contactService.findAll();
     }
 
+    @GetMapping("/client/{id}")
+    public List<ContactDTO> findAllByClientId(@PathVariable Long id) {
+        return contactService.findAllByClientId(id);
+    }
+
     @GetMapping("/{id}")
     public ContactDTO findById(@PathVariable Long id) {
         return contactService.findById(id);
