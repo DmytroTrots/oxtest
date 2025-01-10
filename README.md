@@ -35,6 +35,7 @@ Since the given task completion time is 2 days, the following things were not im
 - Wasn't enough time to test N+1 problem, so it is possible (Can be fixed with @EntityGraph or FETCH Joins in case of custom queries)
 - Documentation of API. But Postman collection is present in the root folder.
 - Web view is raw. There is no ability to CRUD operations from web for Client. But it can be achived with Postman. Also, there is almost no functionality for USER role customers.
+- Credentials are not extracted to env file.
 
 
 
