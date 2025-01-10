@@ -40,6 +40,11 @@ public class TaskController {
         return taskService.findById(id);
     }
 
+    @GetMapping("/client/{id}")
+    public List<TaskDTO> findAllByClientId(@PathVariable Long id) {
+        return taskService.findAllByClientId(id);
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(key = "'allTasks'")

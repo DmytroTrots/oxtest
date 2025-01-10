@@ -7,6 +7,7 @@ import com.trots.oxtest.model.entity.UserEntity;
 import com.trots.oxtest.repository.UserRepository;
 import com.trots.oxtest.service.UserService;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDTO> findAll() {
         return userMapper.toDtos(userRepository.findAll());
+    }
+
+    @Override
+    public Optional<UserEntity> validUsernameAndPassword(String username, String password) {
+        return userRepository.findUserByEmailWithRoles(username)
+                .filter(user -> passwordEncoder.matches(password, user.getPassword()));
     }
 
 }

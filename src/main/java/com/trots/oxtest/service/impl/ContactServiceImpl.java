@@ -41,6 +41,11 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
+    public List<ContactDTO> findAllByClientId(Long clientId) {
+        return contactMapper.toDtos(contactRepository.findAllByClientId(clientId));
+    }
+
+    @Override
     @Transactional
     public ContactDTO update(ContactDTO contactDTO) {
         ContactEntity existingContact = contactRepository.findById(contactDTO.getId()).orElseThrow(() ->

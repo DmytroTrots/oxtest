@@ -9,20 +9,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
 
-    private static final String TOPIC = "/topic";
-    private static final String NOTIFICATIONS = "notifications";
+    private static final String DESTINATION = "/topic/notifications";
 
 
     private final SimpMessagingTemplate messagingTemplate;
 
     @Override
-    public void notifyUser(String userId, String message, String destination) {
-        messagingTemplate.convertAndSendToUser(userId, destination + NOTIFICATIONS, message);
-    }
-
-    @Override
-    public void notifyAllUsers(String message, String destination) {
-        messagingTemplate.convertAndSend(TOPIC + destination, message);
+    public void notifyUser(String userId, String message) {
+        messagingTemplate.convertAndSendToUser(userId, DESTINATION, message);
     }
 
 }

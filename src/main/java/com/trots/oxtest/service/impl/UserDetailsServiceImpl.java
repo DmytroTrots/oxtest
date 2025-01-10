@@ -2,6 +2,8 @@ package com.trots.oxtest.service.impl;
 
 import static com.trots.oxtest.service.impl.UserDetailsServiceImpl.BEAN_NAME;
 
+import com.trots.oxtest.exception.ResourceNotFoundException;
+import com.trots.oxtest.model.entity.UserEntity;
 import com.trots.oxtest.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,7 +21,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findUserByEmailWithRoles(username);
+        return userRepository.findUserByEmailWithRoles(username).orElseThrow(() ->
+                new ResourceNotFoundException(UserEntity.class, username));
     }
 
 }

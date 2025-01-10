@@ -11,6 +11,8 @@ public interface ClientService {
 
     ClientDTO findById(Long id);
 
+    ClientDTO findByUserId(Long userId);
+
     List<ClientDTO> findAll();
 
     ClientDTO update(ClientDTO clientDTO);

@@ -36,6 +36,13 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    public ClientDTO findByUserId(Long userId) {
+        ClientEntity client = clientRepository.findByUserId(userId).orElseThrow(() ->
+              new ResourceNotFoundException(ClientEntity.class, userId));
+        return clientMapper.toDto(client);
+    }
+
+    @Override
     public List<ClientDTO> findAll() {
         return clientMapper.toDtos(clientRepository.findAll());
     }
