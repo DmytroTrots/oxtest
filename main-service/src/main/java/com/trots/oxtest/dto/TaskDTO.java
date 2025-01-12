@@ -1,6 +1,8 @@
 package com.trots.oxtest.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.trots.oxtest.model.TaskStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -30,5 +32,11 @@ public class TaskDTO implements Serializable {
     private Date deadlineTime;
 
     private Long contactId;
+
+    @JsonProperty(access = Access.READ_ONLY)
+    private String contactFirstName;
+
+    @JsonProperty(access = Access.READ_ONLY)
+    private String contactLastName;
 
 }

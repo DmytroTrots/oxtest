@@ -10,6 +10,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +32,7 @@ public class ClientController {
 
     @GetMapping(BASE_MAPPING)
     @Cacheable(key = "'allClients'")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<ClientDTO> findAll() {
        return clientService.findAll();
     }
@@ -41,6 +43,7 @@ public class ClientController {
     }
 
     @GetMapping(BASE_MAPPING + "/user/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ClientDTO findByUserId(@PathVariable Long id) {
         return clientService.findByUserId(id);
     }
@@ -48,6 +51,7 @@ public class ClientController {
     @DeleteMapping(BASE_MAPPING + "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(key = "'allClients'")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteById(@PathVariable Long id) {
         clientService.deleteById(id);
     }
@@ -60,6 +64,7 @@ public class ClientController {
 
     @PutMapping(BASE_MAPPING)
     @CacheEvict(key = "'allClients'")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ClientDTO update(@Valid @RequestBody ClientDTO clientDTO) {
         return clientService.update(clientDTO);
     }

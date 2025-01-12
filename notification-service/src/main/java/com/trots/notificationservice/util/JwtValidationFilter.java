@@ -19,6 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 public class JwtValidationFilter extends OncePerRequestFilter {
 
+    public static final String USERNAME_CLAIM = "username";
     @Value("${jwtKey}")
     private String SECRET_KEY;
 
@@ -54,9 +55,9 @@ public class JwtValidationFilter extends OncePerRequestFilter {
             return (String) Jwts.parserBuilder().setSigningKey(SECRET_KEY).build()
                     .parseClaimsJws(token)
                     .getBody()
-                    .get("username");
+                    .get(USERNAME_CLAIM);
         } catch (ExpiredJwtException e) {
-            return (String) e.getClaims().get("username");
+            return (String) e.getClaims().get(USERNAME_CLAIM);
         }
     }
 

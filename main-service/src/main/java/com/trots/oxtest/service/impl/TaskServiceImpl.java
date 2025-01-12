@@ -8,6 +8,7 @@ import com.trots.oxtest.model.entity.TaskEntity;
 import com.trots.oxtest.repository.TaskRepository;
 import com.trots.oxtest.service.TaskService;
 import com.trots.proxy.NotificationProxy;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -77,9 +78,11 @@ public class TaskServiceImpl implements TaskService {
                                              existingTask.getContact().getUser().getId().toString());
         }
 
-        if (!existingTask.getDeadlineTime().equals(taskDTO.getDeadlineTime()) && existingTask.getContact() != null) {
+        if (!(existingTask.getDeadlineTime().getTime() == taskDTO.getDeadlineTime().getTime()) && existingTask.getContact() != null) {
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
             notificationProxy
-                    .sendNotificationToUser("Task deadline Is changed from " + existingTask.getDeadlineTime().toString() + " to " + taskDTO.getDeadlineTime().toString(),
+                    .sendNotificationToUser("Task deadline Is changed from " + formatter.format(existingTask.getDeadlineTime())
+                                                    + " to " + formatter.format(taskDTO.getDeadlineTime()) ,
                                             existingTask.getContact().getUser().getId().toString());
         }
     }

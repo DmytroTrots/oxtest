@@ -10,6 +10,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,6 +41,11 @@ public class ContactController {
         return contactService.findAllByClientId(id);
     }
 
+    @GetMapping("/user/{id}")
+    public ContactDTO findByUserId(@PathVariable Long id) {
+        return contactService.findByUserId(id);
+    }
+
     @GetMapping("/{id}")
     public ContactDTO findById(@PathVariable Long id) {
         return contactService.findById(id);
@@ -48,12 +54,14 @@ public class ContactController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(key = "'allContacts'")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteById(@PathVariable Long id) {
         contactService.deleteById(id);
     }
 
     @PostMapping
     @CacheEvict(key = "'allContacts'")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ContactDTO save(@Valid @RequestBody ContactDTO contactDTO) {
         return userClientContactManager.saveContactWithUser(contactDTO);
     }
