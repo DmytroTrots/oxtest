@@ -11,5 +11,5 @@ public interface ContactRepository extends JpaRepository<ContactEntity, Long> {
 
     List<ContactEntity> findAllByClientId(Long id);
 
-    Optional<ContactEntity> findByUsername(String username);
+    Optional<ContactEntity> findByUserId(Long userId);
 }

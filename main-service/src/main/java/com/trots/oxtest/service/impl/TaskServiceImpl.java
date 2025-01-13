@@ -75,7 +75,7 @@ public class TaskServiceImpl implements TaskService {
         if (!existingTask.getStatus().equals(taskDTO.getStatus()) && existingTask.getContact() != null) {
             notificationProxy
                     .sendNotificationToUser( "Task status Is changed from " + existingTask.getStatus().name() + " to " + taskDTO.getStatus(),
-                                             existingTask.getContact().getUsername());
+                                             existingTask.getContact().getUser().getId().toString());
         }
 
         if (!(existingTask.getDeadlineTime().getTime() == taskDTO.getDeadlineTime().getTime()) && existingTask.getContact() != null) {
@@ -83,7 +83,7 @@ public class TaskServiceImpl implements TaskService {
             notificationProxy
                     .sendNotificationToUser("Task deadline Is changed from " + formatter.format(existingTask.getDeadlineTime())
                                                     + " to " + formatter.format(taskDTO.getDeadlineTime()) ,
-                                            existingTask.getContact().getUsername());
+                                            existingTask.getContact().getUser().getId().toString());
         }
     }
 

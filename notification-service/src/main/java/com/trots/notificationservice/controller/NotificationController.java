@@ -14,7 +14,7 @@ public class NotificationController implements NotificationProxy {
     private final NotificationService notificationService;
 
     @Override
-    public void sendNotificationToUser(String message, String username) {
-        notificationService.notifyUser(username, message);
+    public void sendNotificationToUser(String message, String id) {
+        notificationService.notifyUser(id, message);
     }
 }

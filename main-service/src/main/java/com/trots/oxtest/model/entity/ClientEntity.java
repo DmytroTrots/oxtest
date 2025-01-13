@@ -3,7 +3,10 @@ package com.trots.oxtest.model.entity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -26,10 +29,11 @@ public class ClientEntity extends BaseEntity {
     private String industry;
     @Column(nullable = false, unique = true)
     private String address;
-    @Column(nullable = false, updatable = false)
-    private String parentUsername;
-    @Column(nullable = false, updatable = false)
-    private String username;
+
+    @EqualsAndHashCode.Exclude
+    @JoinColumn(name = "user_id", nullable = false, updatable = false)
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE, CascadeType.MERGE})
+    private UserEntity user;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
