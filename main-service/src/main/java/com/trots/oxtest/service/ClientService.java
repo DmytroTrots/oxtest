@@ -11,7 +11,7 @@ public interface ClientService {
 
     ClientDTO findById(Long id);
 
-    ClientDTO findByUsername(String username);
+    ClientDTO findByUserId(Long userId);
 
     List<ClientDTO> findAll();
 
