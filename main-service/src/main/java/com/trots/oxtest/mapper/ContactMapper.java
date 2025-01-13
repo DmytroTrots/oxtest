@@ -6,7 +6,7 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = {TaskMapper.class, UserMapper.class})
+@Mapper(componentModel = "spring", uses = TaskMapper.class)
 public interface ContactMapper {
 
     ContactEntity toEntity(ContactDTO dto);

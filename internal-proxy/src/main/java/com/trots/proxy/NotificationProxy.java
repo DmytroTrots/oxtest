@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(value = "NotificationClient", url = "http://localhost:8082", path = "/api/v_0/notifications")
 public interface NotificationProxy {
 
-    @PostMapping("/{id}")
+    @PostMapping("/{username}")
     @MessageMapping("/user-message-{userName}")
-    void sendNotificationToUser(@Payload @RequestBody String message, @DestinationVariable @PathVariable String id);
+    void sendNotificationToUser(@Payload @RequestBody String message, @DestinationVariable @PathVariable String username);
 
 }

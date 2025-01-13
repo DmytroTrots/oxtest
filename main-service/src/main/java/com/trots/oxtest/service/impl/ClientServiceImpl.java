@@ -36,9 +36,9 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public ClientDTO findByUserId(Long userId) {
-        ClientEntity client = clientRepository.findByUserId(userId).orElseThrow(() ->
-              new ResourceNotFoundException(ClientEntity.class, userId));
+    public ClientDTO findByUsername(String username) {
+        ClientEntity client = clientRepository.findByUsername(username).orElseThrow(() ->
+              new ResourceNotFoundException(ClientEntity.class, username));
         return clientMapper.toDto(client);
     }
 
@@ -56,7 +56,6 @@ public class ClientServiceImpl implements ClientService {
         existingClient.setAddress(clientDTO.getAddress());
         existingClient.setIndustry(clientDTO.getIndustry());
         existingClient.setCompanyName(clientDTO.getCompanyName());
-        existingClient.getUser().setEmail(clientDTO.getUser().getEmail());
         return clientMapper.toDto(existingClient);
     }
 

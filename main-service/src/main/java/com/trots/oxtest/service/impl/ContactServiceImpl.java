@@ -46,9 +46,9 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public ContactDTO findByUserId(Long userId) {
-        ContactEntity contact = contactRepository.findByUserId(userId).orElseThrow(() ->
-                 new ResourceNotFoundException(ContactEntity.class, userId));
+    public ContactDTO findByUsername(String username) {
+        ContactEntity contact = contactRepository.findByUsername(username).orElseThrow(() ->
+                 new ResourceNotFoundException(ContactEntity.class, username));
         return contactMapper.toDto(contact);
     }
 
@@ -62,7 +62,6 @@ public class ContactServiceImpl implements ContactService {
         existingContact.setPhone(contactDTO.getPhone());
         existingContact.setFirstName(contactDTO.getFirstName());
         existingContact.setLastName(contactDTO.getLastName());
-        existingContact.getUser().setEmail(contactDTO.getUser().getEmail());
         return contactMapper.toDto(existingContact);
     }
 

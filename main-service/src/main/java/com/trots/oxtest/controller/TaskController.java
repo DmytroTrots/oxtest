@@ -10,7 +10,6 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,19 +31,16 @@ public class TaskController {
 
     @GetMapping
     @Cacheable(key = "'allTasks'")
-    @PreAuthorize("hasAuthority('ADMIN')")
     public List<TaskDTO> findAll() {
         return taskService.findAll();
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public TaskDTO findById(@PathVariable Long id) {
         return taskService.findById(id);
     }
 
     @GetMapping("/client/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public List<TaskDTO> findAllByClientId(@PathVariable Long id) {
         return taskService.findAllByClientId(id);
     }
@@ -52,21 +48,18 @@ public class TaskController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(key = "'allTasks'")
-    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteById(@PathVariable Long id) {
         taskService.deleteById(id);
     }
 
     @PostMapping
     @CacheEvict(key = "'allTasks'")
-    @PreAuthorize("hasAuthority('ADMIN')")
     public TaskDTO save(@Valid @RequestBody TaskDTO taskDTO) {
         return taskCreateManager.createTask(taskDTO);
     }
 
     @PutMapping
     @CacheEvict(key = "'allTasks'")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public TaskDTO updateById(@Valid @RequestBody TaskDTO taskDTO) {
         return taskCreateManager.updateTask(taskDTO);
     }
