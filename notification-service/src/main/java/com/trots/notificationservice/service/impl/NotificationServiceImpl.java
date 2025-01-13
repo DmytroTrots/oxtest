@@ -15,8 +15,8 @@ public class NotificationServiceImpl implements NotificationService {
     private final SimpMessagingTemplate messagingTemplate;
 
     @Override
-    public void notifyUser(String userId, String message) {
-        messagingTemplate.convertAndSend(QUEUE_NAME + userId, message);
+    public void notifyUser(String username, String message) {
+        messagingTemplate.convertAndSend(QUEUE_NAME + username, message);
     }
 
 }
