@@ -17,5 +17,7 @@ public interface ContactService {
 
     List<ContactDTO> findAllByClientId(Long clientId);
 
+    ContactDTO findByUserId(Long userId);
+
     ContactDTO update(ContactDTO contactDTO);
 }

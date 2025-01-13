@@ -14,6 +14,8 @@ public interface TaskMapper {
     List<TaskEntity> toEntities(List<TaskDTO> dtos);
 
     @Mapping(target = "contactId", source = "contact.id")
+    @Mapping(target = "contactFirstName", source = "contact.firstName")
+    @Mapping(target = "contactLastName", source = "contact.lastName")
     TaskDTO toDto(TaskEntity entity);
 
     List<TaskDTO> toDtos(List<TaskEntity> entities);

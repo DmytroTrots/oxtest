@@ -46,6 +46,13 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
+    public ContactDTO findByUserId(Long userId) {
+        ContactEntity contact = contactRepository.findByUserId(userId).orElseThrow(() ->
+                 new ResourceNotFoundException(ContactEntity.class, userId));
+        return contactMapper.toDto(contact);
+    }
+
+    @Override
     @Transactional
     public ContactDTO update(ContactDTO contactDTO) {
         ContactEntity existingContact = contactRepository.findById(contactDTO.getId()).orElseThrow(() ->

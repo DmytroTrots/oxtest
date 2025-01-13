@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtUtil {
 
+    public static final String USERNAME_CLAIM = "username";
     @Value("${jwtKey}")
     private String SECRET_KEY;
     private static final long EXPIRATION_TIME = 3600000;
@@ -21,7 +22,7 @@ public class JwtUtil {
     public String generateToken(UserEntity user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", user.getId());
-        claims.put("username", user.getEmail());
+        claims.put(USERNAME_CLAIM, user.getEmail());
         claims.put("roles", user.getRoles());
 
         return Jwts.builder()
@@ -38,9 +39,9 @@ public class JwtUtil {
             return (String) Jwts.parserBuilder().setSigningKey(SECRET_KEY).build()
                     .parseClaimsJws(token)
                     .getBody()
-                    .get("username");
+                    .get(USERNAME_CLAIM);
         } catch (ExpiredJwtException e) {
-            return (String) e.getClaims().get("username");
+            return (String) e.getClaims().get(USERNAME_CLAIM);
         }
     }
 
